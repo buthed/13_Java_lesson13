@@ -2,15 +2,20 @@ package com.tematihonov;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
 
 public class Main {
+
     public static final int CARS_COUNT = 4;
     protected static final CountDownLatch PREPARING = new CountDownLatch(CARS_COUNT);
     protected static final CyclicBarrier STARTING = new CyclicBarrier(CARS_COUNT);
     protected static final CountDownLatch FINISHING = new CountDownLatch(CARS_COUNT);
-        public static void main (String[]args) throws InterruptedException{
+    protected static final CountDownLatch WINNER = new CountDownLatch(1);
+
+        public static void main (String[]args) throws InterruptedException, BrokenBarrierException {
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
             Race race = new Race(new Road(60), new Tunnel(), new Road(40));
             Car[] cars = new Car[CARS_COUNT];
@@ -22,8 +27,12 @@ public class Main {
                 final int w = i;
                 new Thread(cars[w]).start();
             }
-            PREPARING.await();
+
+            PREPARING.await();                                                  //ожидание готовности всех участников
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+            WINNER.await();
+            System.out.println("Победитель есть, но я не знаю как вывести его номер");
+
             FINISHING.await();
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
 
