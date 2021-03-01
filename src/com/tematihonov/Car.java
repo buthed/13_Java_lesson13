@@ -1,6 +1,6 @@
 package com.tematihonov;
 
-import static com.tematihonov.Main.PREPARING;
+import static com.tematihonov.Main.*;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
@@ -25,14 +25,21 @@ public class Car implements Runnable {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int)(Math.random() * 800));
             System.out.println(this.name + " готов");
-            PREPARING.countDown();
-            PREPARING.await();
+            STARTING.await();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        PREPARING.countDown();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
+        FINISHING.countDown();
     }
 }

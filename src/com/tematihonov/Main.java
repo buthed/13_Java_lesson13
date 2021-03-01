@@ -8,6 +8,8 @@ import java.util.concurrent.CyclicBarrier;
 public class Main {
     public static final int CARS_COUNT = 4;
     protected static final CountDownLatch PREPARING = new CountDownLatch(CARS_COUNT);
+    protected static final CyclicBarrier STARTING = new CyclicBarrier(CARS_COUNT);
+    protected static final CountDownLatch FINISHING = new CountDownLatch(CARS_COUNT);
         public static void main (String[]args) throws InterruptedException{
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
             Race race = new Race(new Road(60), new Tunnel(), new Road(40));
@@ -20,10 +22,10 @@ public class Main {
                 final int w = i;
                 new Thread(cars[w]).start();
             }
-
-
-
-
+            PREPARING.await();
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+            FINISHING.await();
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
 
 
 
