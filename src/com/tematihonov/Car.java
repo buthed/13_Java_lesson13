@@ -1,5 +1,7 @@
 package com.tematihonov;
 
+import java.util.concurrent.CyclicBarrier;
+
 public class Car implements Runnable {
     private static int CARS_COUNT;
     private Race race;
@@ -23,13 +25,17 @@ public class Car implements Runnable {
 
     @Override
     public void run() {
-        try {
+        CyclicBarrier cb = new CyclicBarrier(4);
+        new Thread(() -> {
+            try {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int) (Math.random() * 800));
             System.out.println(this.name + " готов");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            cb.await();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }

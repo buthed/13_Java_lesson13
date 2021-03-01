@@ -2,6 +2,7 @@ package com.tematihonov;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.CyclicBarrier;
 
 public class Main {
     public static final int CARS_COUNT = 4;
@@ -12,6 +13,18 @@ public class Main {
             for (int i = 0; i < cars.length; i++) {
                 cars[i] = new Car(race, 20 + (int) (Math.random() * 10));
             }
+//            CyclicBarrier cb = new CyclicBarrier(cars.length);
+//            for (int i = 0; i < cars.length; i++) {
+//                final int w = i;
+//                new Thread(() -> {
+//                    try {
+//                        new Thread(cars[w]).start();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }).start();
+
+
             for (int i = 0; i < cars.length; i++) {
                 new Thread(cars[i]).start();
             }
